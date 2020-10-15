@@ -1,14 +1,19 @@
 import { TextField, InputAdornment, Button, Paper } from "@material-ui/core";
-import { LockOutlined, EmailOutlined } from "@material-ui/icons";
+import {
+  EmailOutlined,
+  LockOutlined,
+  PersonOutlineOutlined,
+} from "@material-ui/icons";
 import React, { useState } from "react";
 import background from "../assets/wave.svg";
 import image from "../assets/Startup.svg";
-import firebase from "../firebase/firebase";
 import { Link, useHistory } from "react-router-dom";
+import firebase from "../firebase/firebase";
 
-const SignIn = () => {
+const SignUp = () => {
   const history = useHistory();
   const [values, setValues] = useState({
+    username: "",
     email: "",
     password: "",
   });
@@ -21,22 +26,11 @@ const SignIn = () => {
     }));
   };
 
-  const handleSignIn = async (e) => {
-    const { email, password } = values;
+  const handleSignUp = async (e) => {
+    const { username, email, password } = values;
     e.preventDefault();
     try {
-      await firebase.signIn(email, password);
-      history.push("/");
-    } catch (err) {
-      console.error("Auth error", err);
-      alert(err.message);
-    }
-  };
-
-  const handleSignInWithGoogle = async (e) => {
-    e.preventDefault();
-    try {
-      await firebase.signInWithGoogle();
+      await firebase.register(username, email, password);
       history.push("/");
     } catch (err) {
       console.error("Auth error", err);
@@ -54,9 +48,27 @@ const SignIn = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <form noValidate onSubmit={handleSignIn}>
-        <h2 style={{ margin: 0, marginBottom: "8px" }}>Sign In</h2>
+      <form onSubmit={handleSignUp}>
+        <h2 style={{ margin: 0, marginBottom: "8px" }}>Sign Up</h2>
         <img src={image} alt="pic" width="100%" height="180px" />
+        <TextField
+          required
+          type="text"
+          name="username"
+          value={values.username}
+          onChange={handleChange}
+          label="Username"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonOutlineOutlined />
+              </InputAdornment>
+            ),
+          }}
+        />
         <TextField
           required
           type="email"
@@ -94,26 +106,15 @@ const SignIn = () => {
           }}
         />
         <Button type="submit" variant="contained" color="primary" fullWidth>
-          Sign In
+          Sign Up
         </Button>
-        <p style={{ margin: "4px", fontSize: "12px" }}>OR</p>
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<i className="fab fa-google"></i>}
-          style={{ backgroundColor: "#e34134" }}
-          fullWidth
-          onClick={handleSignInWithGoogle}
-        >
-          Sign in with Google
-        </Button>
-        <p style={{ margin: "8px 0 0 0", fontSize: "14px" }}>Forgot password</p>
-        <p style={{ margin: 0, fontSize: "14px" }}>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+
+        <p style={{ marginBottom: 0, fontSize: "14px" }}>
+          Already have an account? <Link to="/signin">Sign In</Link>
         </p>
       </form>
     </Paper>
   );
 };
 
-export default SignIn;
+export default SignUp;
