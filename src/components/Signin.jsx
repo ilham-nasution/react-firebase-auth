@@ -3,6 +3,7 @@ import { LockOutlined, PersonOutlineOutlined } from "@material-ui/icons";
 import React, { useRef } from "react";
 import background from "../assets/wave.svg";
 import image from "../assets/Startup.svg";
+import firebase from "../firebase/firebase";
 
 const Signin = () => {
   const email = useRef();
@@ -10,7 +11,7 @@ const Signin = () => {
 
   return (
     <Paper
-      elevation="2"
+      elevation={2}
       style={{
         padding: "24px",
         textAlign: "center",
@@ -19,7 +20,7 @@ const Signin = () => {
       }}
     >
       <form noValidate>
-        <h1>Sign In</h1>
+        <h2 style={{ margin: 0, marginBottom: "8px" }}>Sign In</h2>
         <img src={image} alt="pic" width="100%" height="180px" />
         <TextField
           required
@@ -53,16 +54,26 @@ const Signin = () => {
             ),
           }}
         />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          style={{ marginTop: "16px" }}
-        >
+        <Button type="submit" variant="contained" color="primary" fullWidth>
           Sign In
         </Button>
-        <p>Don't have an account? Sign Up</p>
+        <p style={{ margin: "4px", fontSize: "12px" }}>OR</p>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<i className="fab fa-google"></i>}
+          style={{ backgroundColor: "#e34134" }}
+          fullWidth
+          onClick={() => {
+            firebase.signInWithGoogle();
+          }}
+        >
+          Sign in with Google
+        </Button>
+        <p style={{ margin: "8px 0 0 0", fontSize: "14px" }}>Forgot password</p>
+        <p style={{ margin: 0, fontSize: "14px" }}>
+          Don't have an account? Sign Up
+        </p>
       </form>
     </Paper>
   );
